@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAZE.420 - Premium Fragrance Collection</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="style.css">
+<style>
+/* Minimal styles to restore carousel look */
+.hero-carousel { position: relative; height: 100vh; overflow: hidden; }
+.slide { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; transition: opacity 1s ease-in-out; background-size: cover; background-position: center; }
+.slide.active { opacity: 1; }
+.overlay { position: absolute; top: 0; left:0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.35); }
+.hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; text-align: center; }
+.btn-primary { background: #b77b63; color: #fff; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; }
+</style>
+</head>
+<body>
+    
+
+<!-- Header -->
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><h2><i class="fas fa-spray-can"></i> HAZE.420</h2></div>
+           <ul class="nav-menu">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    
+    <!-- ADD HERE -->
+    <li><a href="login.html">Login</a></li>
+    <li><a href="signup.html">Sign Up</a></li>
+</ul>
+            <div class="nav-icons">
+    <i class="fas fa-search search-btn"></i>
+    <input type="text" id="searchInput" placeholder="Search products..." style="display:none; padding:5px; border-radius:5px; border:1px solid #ccc;">
+    <div class="cart-icon" id="cartIcon">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+</div>
+            </div>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero Carousel -->
+<section id="home" class="hero">
+    <div class="hero-carousel">
+        <div class="slide active" style="background-image: url('p1.png');">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1>Discover Your Signature Scent</h1>
+                <p>Luxury fragrances crafted for timeless elegance</p>
+                <a href="#products" class="btn btn-primary">Shop Collection</a>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('p3.jpg');">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1>Elevate Your Senses</h1>
+                <p>Premium ingredients, unforgettable impressions</p>
+                <a href="#products" class="btn btn-primary">Explore Now</a>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('p4.jpeg');">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1>The Art of Fragrance</h1>
+                <p>Handcrafted scents for the discerning individual</p>
+                <a href="#products" class="btn btn-primary">Shop Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="products">
+    <div class="container">
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="women">Women</button>
+            <button class="filter-btn" data-filter="men">Men</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Crafted with Passion</h2>
+                <p>Every bottle tells a story. Our master perfumers blend rare ingredients from around the world to create fragrances that linger in memory and elevate every moment.</p>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<!-- Cart Modal -->
+<div class="cart-modal" id="cartModal">
+    <div class="cart-modal-content">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <span class="close-cart" id="closeCart">&times;</span>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: $<span id="cartTotal">0</span></div>
+            <button class="btn btn-primary checkout-btn">Checkout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer id="contact" class="footer">
+    <div class="container">
+        <p>&copy; 2024 HAZE.420. All rights reserved.</p>
+        <p>
+           Email: <a href="mailto:info@haze420.com">info@haze420.com</a> <br>
+Phone: <a href="tel:+639123456789">+63 912 345 6789</a> <br>
+Instagram: <a href="https://instagram.com/haze420" target="_blank">@haze420</a> <br>
+Facebook: <a href="https://www.facebook.com/jackboyZzz.jhamere/about/" target="_blank">Jhamere pierre jacobe</a>
+        </p>
+    </div>
+</footer>
+<script>
+// ------------------ Hero Carousel ------------------
+let slides = document.querySelectorAll('.slide');
+let currentSlide = 0;
+setInterval(()=>{
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+},5000);
+
+// ------------------ Hamburger Toggle ------------------
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.querySelector('.nav-menu');
+hamburger.addEventListener('click', ()=>navMenu.classList.toggle('active'));
+
+// ------------------ Product Data ------------------
+const products = [
+    {id:1,name:"Luxury Rose Perfume",price:120,image:"p1.png",category:"women"},
+    {id:2,name:"Citrus Breeze",price:100,image:"p3.jpg",category:"men"},
+    {id:3,name:"Vanilla Musk",price:110,image:"p4.jpeg",category:"women"},
+    {id:4,name:"Ocean Mist",price:105,image:"p3.jpg",category:"men"},
+    {id:1,name:"Luxury Rose Perfume",price:120,image:"p1.png",category:"women"},
+    {id:2,name:"Citrus Breeze",price:100,image:"p3.jpg",category:"men"},
+    {id:3,name:"Vanilla Musk",price:110,image:"p4.jpeg",category:"women"},
+    {id:4,name:"Ocean Mist",price:105,image:"p3.jpg",category:"men"}
+];
+
+// ------------------ DOM References ------------------
+const productsGrid = document.getElementById('productsGrid');
+const filterButtons = document.querySelectorAll('.filter-btn');
+const cartCount = document.getElementById('cartCount');
+const cartItemsEl = document.getElementById('cartItems');
+const cartTotalEl = document.getElementById('cartTotal');
+const checkoutBtn = document.querySelector('.checkout-btn');
+const cartModal = document.getElementById('cartModal');
+const cartIcon = document.getElementById('cartIcon');
+const closeCart = document.getElementById('closeCart');
+const searchBtn = document.querySelector('.search-btn');
+const searchInput = document.getElementById('searchInput');
+
+// ------------------ Cart ------------------
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// ------------------ Display Products ------------------
+function displayProducts(filteredProducts = null){
+    productsGrid.innerHTML='';
+    let filter = document.querySelector('.filter-btn.active').dataset.filter;
+
+    let list = filteredProducts || products;
+    // Apply category filter
+    list = filter === 'all' ? list : list.filter(p=>p.category === filter);
+
+    list.forEach(p=>{
+        const inCart = cart.find(item=>item.id===p.id);
+        const div = document.createElement('div');
+        div.className='product';
+        div.innerHTML = `<img src="${p.image}" alt="${p.name}">
+                         <h4>${p.name}</h4>
+                         <p>$${p.price}</p>
+                         <button class="add-to-cart" data-id="${p.id}">${inCart?'Added':'Add to Cart'}</button>`;
+        productsGrid.appendChild(div);
+    });
+}
+displayProducts();
+
+// ------------------ Filter Buttons ------------------
+filterButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        filterButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        displayProducts();
+        searchInput.value = ''; // reset search on filter change
+    });
+});
+
+// ------------------ Search Functionality ------------------
+searchBtn.addEventListener('click', ()=>{
+    searchInput.style.display = searchInput.style.display === 'block' ? 'none' : 'block';
+    searchInput.focus();
+});
+
+searchInput.addEventListener('input', ()=>{
+    const query = searchInput.value.toLowerCase();
+    const filtered = products.filter(p=> p.name.toLowerCase().includes(query));
+    displayProducts(filtered);
+});
+
+// ------------------ Cart Functionality ------------------
+productsGrid.addEventListener('click', e=>{
+    if(e.target.classList.contains('add-to-cart')){
+        const id = parseInt(e.target.dataset.id);
+        if(!cart.find(item=>item.id===id)){
+            cart.push(products.find(p=>p.id===id));
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+            displayProducts();
+        }
+    }
+});
+
+// ------------------ Update Cart ------------------
+function updateCart(){
+    cartCount.innerText = cart.length;
+    cartItemsEl.innerHTML='';
+    let total=0;
+    cart.forEach(item=>{
+        total+=item.price;
+        const div = document.createElement('div');
+        div.className='cart-item';
+        div.innerHTML=`<p>${item.name}</p><span>$${item.price}</span>`;
+        cartItemsEl.appendChild(div);
+    });
+    cartTotalEl.innerText = total.toFixed(2);
+}
+updateCart();
+
+// ------------------ Cart Modal ------------------
+cartIcon.addEventListener('click', ()=>cartModal.style.display='block');
+closeCart.addEventListener('click', ()=>cartModal.style.display='none');
+window.addEventListener('click', e=>{if(e.target===cartModal) cartModal.style.display='none';});
+
+// ------------------ Checkout ------------------
+checkoutBtn.addEventListener('click', ()=>{
+    if(cart.length===0){alert('Your cart is empty!'); return;}
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.location.href='checkout.html';
+});
+</script>
+</script>
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeLogin">&times;</span>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" placeholder="Email" required><br><br>
+            <input type="password" placeholder="Password" required><br><br>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <p>Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p>
+    </div>
+</div>
+
+<!-- Sign Up Modal -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeSignup">&times;</span>
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <input type="text" placeholder="Full Name" required><br><br>
+            <input type="email" placeholder="Email" required><br><br>
+            <input type="password" placeholder="Password" required><br><br>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+    </div>
+</div>
+
+</body>
+</html>

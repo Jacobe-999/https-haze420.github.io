@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - HAZE.420</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ------------------ Container ------------------ */
+.container { max-width: 900px; margin: 50px auto; padding: 0 15px; }
+
+/* ------------------ Checkout Layout ------------------ */
+.checkout-content { display: flex; gap: 30px; flex-wrap: wrap; }
+
+/* Cart & Form Styling */
+.checkout-cart, .checkout-form {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Cart Items */
+.checkout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.checkout-item p { margin: 0; flex: 1; }
+.checkout-item input { width: 50px; text-align: center; padding: 5px; border-radius: 5px; border: 1px solid #ccc; }
+.remove-item { cursor: pointer; color: red; font-weight: bold; }
+
+/* Checkout Total */
+.checkout-total { margin-top: 15px; font-size: 1.2rem; font-weight: bold; text-align: right; }
+
+/* Payment Form */
+.checkout-form h3 { text-align: center; margin-bottom: 20px; font-family: 'Playfair Display', serif; }
+.checkout-form label { display: block; margin-bottom: 5px; font-weight: 500; }
+.checkout-form input, .checkout-form textarea, .checkout-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.payment-info {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px dashed #888;
+    border-radius: 5px;
+    background: #f9f9f9;
+    display: none;
+}
+
+/* Buttons */
+.btn { padding: 0.6rem 1rem; border-radius: 25px; border: none; cursor: pointer; background: #b77b63; color: #fff; transition: 0.3s; width: 100%; }
+.btn:hover { background: #a86a51; }
+.btn-secondary { background: #fff; border: 1px solid #b77b63; color: #b77b63; margin-top: 15px; }
+.btn-secondary:hover { background: #b77b63; color: #fff; }
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .checkout-content { flex-direction: column; }
+    .checkout-cart, .checkout-form { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center; margin-bottom:30px;">Checkout</h2>
+
+    <div class="checkout-content">
+        <!-- Cart Summary -->
+        <div class="checkout-cart">
+            <h3>Order Summary</h3>
+            <div id="checkoutCartItems"></div>
+            <div class="checkout-total">Total: $<span id="checkoutTotal">0</span></div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="checkout-form">
+            <h3>Payment & Delivery</h3>
+            <form id="paymentForm">
+                <label>Full Name</label>
+                <input type="text" id="name" required>
+
+                <label>Address</label>
+                <textarea id="address" rows="3" required></textarea>
+
+                <label>Phone</label>
+                <input type="text" id="phone" required>
+
+                <label>Payment Method</label>
+                <select id="payment" required>
+                    <option value="">-- Select Payment --</option>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="gcash">GCash</option>
+                    <option value="bank">Bank Transfer</option>
+                </select>
+
+                <div class="payment-info" id="paymentInfo"></div>
+
+                <button type="submit" class="btn">Place Order</button>
+            </form>
+            <button class="btn-secondary" onclick="window.location.href='index.html'">Back to Home</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+const checkoutCartItems = document.getElementById('checkoutCartItems');
+const checkoutTotal = document.getElementById('checkoutTotal');
+const paymentSelect = document.getElementById('payment');
+const paymentInfo = document.getElementById('paymentInfo');
+const paymentForm = document.getElementById('paymentForm');
+
+// Function to display cart
+function displayCart() {
+    checkoutCartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, index) => {
+        total += item.price * (item.quantity || 1);
+        const div = document.createElement('div');
+        div.classList.add('checkout-item');
+        div.innerHTML = `
+            <p>${item.name}</p>
+            <input type="number" min="1" value="${item.quantity || 1}" data-index="${index}">
+            <span>$${(item.price * (item.quantity || 1)).toFixed(2)}</span>
+            <span class="remove-item" data-index="${index}">&times;</span>
+        `;
+        checkoutCartItems.appendChild(div);
+    });
+    checkoutTotal.innerText = total.toFixed(2);
+
+    // Quantity change
+    checkoutCartItems.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', e => {
+            let idx = parseInt(e.target.dataset.index);
+            let val = parseInt(e.target.value);
+            if(val < 1) val = 1;
+            cart[idx].quantity = val;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        });
+    });
+
+    // Remove item
+    checkoutCartItems.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', e => {
+            let idx = parseInt(e.target.dataset.index);
+            cart.splice(idx, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        });
+    });
+}
+
+// Initial display
+displayCart();
+
+// Payment info
+paymentSelect.addEventListener('change', () => {
+    paymentInfo.style.display = 'block';
+    if(paymentSelect.value==='cod'){
+        paymentInfo.innerHTML = 'Pay cash upon delivery.';
+    } else if(paymentSelect.value==='gcash'){
+        paymentInfo.innerHTML = 'Send payment to GCash #: 09123456789';
+    } else if(paymentSelect.value==='bank'){
+        paymentInfo.innerHTML = 'Bank: ABC Bank<br>Acc #: 1234567890<br>Send proof to hello@luxuriaperfumes.com';
+    } else paymentInfo.style.display='none';
+});
+
+// Form submit
+paymentForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if(cart.length === 0){
+        alert('Your cart is empty!');
+        return;
+    }
+    const name = document.getElementById('name').value;
+    alert(`Thank you ${name}! Your order has been placed.\nPayment Method: ${paymentSelect.value.toUpperCase()}\nTotal: $${checkoutTotal.innerText}`);
+    localStorage.removeItem('cart');
+    cart = [];
+    displayCart();
+    paymentForm.reset();
+    paymentInfo.style.display = 'none';
+});
+</script>
+</body>
+</html>
